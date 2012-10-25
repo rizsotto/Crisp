@@ -19,7 +19,6 @@ add_library(crispllvm SHARED
     LLVMPrologQueries.cpp
     CrispModulePass.cpp)
 
-target_link_libraries(crispllvm PrologEngineWrapper)
 add_dependencies(crispllvm run_llvm_decl_extractor)
 
 include_directories(${CRISP_INCLUDE_DIRS})
@@ -31,7 +30,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #add_definitions(${CLANG_DEFINITIONS})
 add_definitions(${SWIPL_DEFINITIONS})
 
-target_link_libraries(crispllvm ${SWIPL_LIBRARIES})
+target_link_libraries(crispllvm PrologEngineWrapper ${SWIPL_LIBRARIES})
 
 install(TARGETS crispllvm
     LIBRARY DESTINATION lib)

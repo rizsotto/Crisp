@@ -6,8 +6,6 @@ add_library(declextractor SHARED
     DeclExtractorPrologPredicateRegistration.c
     DeclExtractorPrologPredicates.cpp)
 
-target_link_libraries(declextractor PrologEngineWrapper)
-
 include_directories(${CRISP_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${CLANG_INCLUDE_DIRS})
@@ -16,4 +14,4 @@ include_directories(${SWIPL_INCLUDE_DIRS})
 add_definitions(${CLANG_DEFINITIONS})
 add_definitions(${SWIPL_DEFINITIONS})
 
-target_link_libraries(declextractor ${SWIPL_LIBRARIES})
+target_link_libraries(declextractor PrologEngineWrapper ${SWIPL_LIBRARIES})

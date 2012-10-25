@@ -18,7 +18,6 @@ add_library(crispclang SHARED
     CompilationInfo.cpp
     CrispASTAction.cpp)
 
-target_link_libraries(crispclang PrologEngineWrapper)
 add_dependencies(crispclang run_clang_decl_extractor)
 
 include_directories(${CRISP_INCLUDE_DIRS})
@@ -30,7 +29,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #add_definitions(${CLANG_DEFINITIONS})
 add_definitions(${SWIPL_DEFINITIONS})
 
-target_link_libraries(crispclang ${SWIPL_LIBRARIES})
+target_link_libraries(crispclang PrologEngineWrapper ${SWIPL_LIBRARIES})
 
 install(TARGETS crispclang
     LIBRARY DESTINATION lib)
