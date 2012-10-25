@@ -197,20 +197,11 @@ namespace crisp {
   class CrispASTAction : public PluginASTAction {
   public:
     CrispASTAction()
-        : PluginASTAction()
-        , BootFilesDir("crisp-boot-dir",
-                        cl::desc("Specify boot files directory"),
-                        cl::value_desc("dir"),
-                        cl::init(XSTR(DATA_INSTALL_ROOT)))
-        , RulesFileName(cl::Positional,
-                        cl::value_desc("rule_file"),
-                        cl::Required)
-        , FlagInteractive("-interactive",
-                        cl::desc("Enable interactive Prolog session"),
-                        cl::init(false))
-        , FlagDebug("-debug", 
-                        cl::desc("Enable debug output"),
-                        cl::init(false))
+      : PluginASTAction()
+      , BootFilesDir()
+      , RulesFileName()
+      , FlagInteractive(false)
+      , FlagDebug(false)
     { }
 
   protected:
@@ -222,32 +213,56 @@ namespace crisp {
     virtual bool ParseArgs(const CompilerInstance &CI,
                            const std::vector<std::string> &Args);
   private:
-    cl::opt<std::string> BootFilesDir;
-    cl::opt<std::string> RulesFileName;
-    cl::opt<bool> FlagInteractive;
-    cl::opt<bool> FlagDebug;
+    std::string BootFilesDir;
+    std::string RulesFileName;
+    bool FlagInteractive;
+    bool FlagDebug;
   };
+
+  static char const * const PluginName = "crisp-clang";
 
   bool CrispASTAction::ParseArgs(const CompilerInstance &CI,
                                  const std::vector<std::string> &Args) {
 
     std::vector<char const *> ArgPtrs;
     {
-        // make cl::ParseCommandLineOptions happy
-        static char const * const prg_name = "crisp-clang";
-        ArgPtrs.push_back(prg_name);
+      // make cl::ParseCommandLineOptions happy
+      ArgPtrs.push_back(PluginName);
+
+      b::transform(b::make_iterator_range(Args.begin(), Args.end()),
+                   std::back_inserter(ArgPtrs),
+                   b::mem_fun_ref(&std::string::c_str));
     }
+    {
+      static cl::opt<std::string> const
+        BootFilesDirParser("crisp-boot-dir",
+                        cl::desc("Specify boot files directory"),
+                        cl::value_desc("dir"),
+                        cl::init(XSTR(DATA_INSTALL_ROOT)));
+      static cl::opt<std::string> const
+        RulesFileNameParser(cl::Positional,
+                        cl::value_desc("rule_file"),
+                        cl::Required);
+      static cl::opt<bool> const
+        FlagInteractiveParser("-interactive",
+                        cl::desc("Enable interactive Prolog session"),
+                        cl::init(false));
+      static cl::opt<bool> const
+        FlagDebugParser("-debug",
+                        cl::desc("Enable debug output"),
+                        cl::init(false));
 
-    b::transform(b::make_iterator_range(Args.begin(), Args.end()),
-                 std::back_inserter(ArgPtrs),
-                 b::mem_fun_ref(&std::string::c_str));
+      cl::ParseCommandLineOptions(ArgPtrs.size(), &ArgPtrs.front());
 
-    cl::ParseCommandLineOptions(ArgPtrs.size(), &ArgPtrs.front());
-
+      BootFilesDir = BootFilesDirParser;
+      RulesFileName = RulesFileNameParser;
+      FlagInteractive = FlagInteractiveParser;
+      FlagDebug = FlagDebugParser;
+    }
     return true;
   }
 
   static FrontendPluginRegistry::Add<CrispASTAction>
-  X("crisp-clang", "Data extraction clang plugin for CRISP");
+    X(PluginName, "Data extraction clang plugin for CRISP");
 
 } // End namespace crisp
