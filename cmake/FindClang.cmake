@@ -4,7 +4,7 @@
 #   CLANG_DEFINITIONS
 #   CLANG_EXECUTABLE
 
-function(set_clang_cxx_flags config_cmd)
+function(set_clang_definitions config_cmd)
   execute_process(COMMAND ${config_cmd} --cppflags OUTPUT_VARIABLE llvm_cppflags OUTPUT_STRIP_TRAILING_WHITESPACE)
 
   string(REGEX MATCHALL "(-D[^ ]*)" cxxflags ${llvm_cppflags})
@@ -40,7 +40,6 @@ function(set_clang_include_dirs config_cmd)
   set(CLANG_INCLUDE_DIRS ${include_dirs} PARENT_SCOPE)
 endfunction()
 
-
 find_program(LLVM_CONFIG llvm-config
     PATHS ENV LLVM_PATH)
 if(LLVM_CONFIG)
@@ -65,7 +64,7 @@ else()
   message(FATAL_ERROR "Can't found program: clang")
 endif()
 
-set_clang_cxx_flags(${LLVM_CONFIG})
+set_clang_definitions(${LLVM_CONFIG})
 set_clang_include_dirs(${LLVM_CONFIG})
 
 message(STATUS "llvm-config filtered cpp flags : ${CLANG_DEFINITIONS}")
