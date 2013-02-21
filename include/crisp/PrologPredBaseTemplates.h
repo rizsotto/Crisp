@@ -297,7 +297,6 @@ namespace crisp {
         // children traversal, that can contain null
         // StmtIteratorImpl's. Maybe necessary for other iterator
         // types as well.
-        if ( !C) return iterator_type();
         return (C ->* Begin)();
       }
       static inline iterator_type end(container_type C) {
@@ -305,7 +304,6 @@ namespace crisp {
         // children traversal, that can contain null
         // StmtIteratorImpl's. Maybe necessary for other iterator
         // types as well.
-        if ( !C) return iterator_type();
         return (C ->* End)();
       }
     };
@@ -402,7 +400,6 @@ namespace crisp {
                          control_t Handle) {
       typedef typename IteratorHelper::iterator_type iterator_type;
       typedef typename Context<iterator_type>::context_type context_type;
-      iterator_type It;
       context_type Ctxt;
       typename Retrieve<ArgumentType>::argument_type Container;
 
@@ -412,6 +409,7 @@ namespace crisp {
           return FALSE;
       }
 
+      iterator_type It = IteratorHelper::end(Container);
       switch (PL_foreign_control(Handle)) {
       case PL_FIRST_CALL:                     // Get first elem
         It = IteratorHelper::begin(Container);
