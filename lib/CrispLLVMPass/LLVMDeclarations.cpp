@@ -17,15 +17,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "llvm/Argument.h"
-#include "llvm/Function.h"
-#include "llvm/Instruction.h"
-#include "llvm/Instructions.h"
-#include "llvm/Module.h"
+#include "llvm/IR/Argument.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/Instruction.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/Module.h"
 #include "llvm/Support/InstIterator.h"
-#include "llvm/Use.h"
-#include "llvm/DataLayout.h"
-#include "llvm/Type.h"
+#include "llvm/IR/Use.h"
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/Type.h"
 
 int main() {
   return 0;

@@ -26,12 +26,12 @@
 
 #include "llvm/ADT/Statistic.h"
 #include "llvm/Analysis/AliasAnalysis.h"
-#include "llvm/Module.h"
+#include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/raw_ostream.h"
-#include "llvm/DataLayout.h"
+#include "llvm/IR/DataLayout.h"
 
 #include "crisp/RunPrologEngine.h"
 #include "LLVMCompilationInfo.h"

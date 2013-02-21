@@ -29,7 +29,7 @@
 
 #include "llvm/ADT/ilist.h"
 #include "llvm/ADT/Twine.h"
-#include "llvm/Use.h"
+#include "llvm/IR/Use.h"
 
 using namespace llvm;
 
