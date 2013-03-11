@@ -11,3 +11,6 @@ include_directories(${SWIPL_INCLUDE_DIRS})
 
 add_definitions(${CLANG_DEFINITIONS})
 add_definitions(${SWIPL_DEFINITIONS})
+
+set_target_properties(PrologEngineWrapper PROPERTIES
+    POSITION_INDEPENDENT_CODE True)
