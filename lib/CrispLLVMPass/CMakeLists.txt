@@ -1,4 +1,6 @@
 
+include(GNUInstallDirs)
+
 generate_declarations(LLVMDeclarations.cpp init_llvm_base_types)
 
 add_library(crispllvm SHARED
@@ -22,4 +24,4 @@ add_definitions(${SWIPL_DEFINITIONS})
 target_link_libraries(crispllvm PrologEngineWrapper ${SWIPL_LIBRARIES})
 
 install(TARGETS crispllvm
-    LIBRARY DESTINATION lib)
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

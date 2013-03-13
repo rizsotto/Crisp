@@ -1,4 +1,6 @@
 
+include(GNUInstallDirs)
+
 set(DATA_OBJ_ROOT ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
 
 macro(generate_all_prolog_state)
@@ -28,9 +30,9 @@ install(
   FILES
     ${CMAKE_CURRENT_BINARY_DIR}/PrologBootForCrispClangPlugin.sh
     ${CMAKE_CURRENT_BINARY_DIR}/PrologBootForCrispLLVMPass.sh
-  DESTINATION share)
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
 
 install(
   DIRECTORY Rules/
-  DESTINATION share
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
   FILES_MATCHING PATTERN "*.pl")
