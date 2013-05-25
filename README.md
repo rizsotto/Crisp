@@ -24,39 +24,30 @@ GNU/Linux only so far.
 Prerequisites
 -------------
 
-1. [Install and build **LLVM/Clang sources**]
-   [CLANG-GET-STARTED]. Note that:
-   - (Steps 2 and 3) There are also Git repositories available for
-     both LLVM (`http://llvm.org/git/llvm.git`) and Clang
-     (`http://llvm.org/git/clang.git`) that you can use as an
-     alternative to `svn`.
-   - (Step 4) It is not necessary.
-   - (Step 5) By default, LLVM/Clang is build in *Debug+Asserts*
-     mode. There are many [other build combinations]
-     [LLVM-COMPILE]. E.g., you can set environment variables
-     `ENABLE_OPTIMIZED=1` and `DISABLE_ASSERTIONS=1` when running
-     `make` to build in *Release* mode.
+1. Install **LLVM/Clang**. Either you do install from sources or package
+   for your distribution, the Clang version shall match with Crisp version.
+   Make sure that `llvm-config` and `clang` executables are in the `PATH`
+   environment.
 
-2. Install **SWI-Prolog**. Version 5.10 or greater is recommended. It
+2. Install **Lit**. This is optional, do only if you want to run the tests!
+   Lit is the [LLVM Integrated Tester][LIT]. If you installed Clang from
+   sources, you shall have it automaticaly. If your package manager does
+   not provide it, you can simply install from [PyPI][PyPI] because it is
+   written in python.
+
+3. Install **SWI-Prolog**. Version 5.10 or greater is recommended. It
    is most likely provided as a pre-compiled package for your
    GNU/Linux distribution. On Debian/Ubuntu (and derivatives) you
    simply need to type `sudo apt-get install swi-prolog`. On other
    systems, you need to be sure that a dynamic library (called
-   `libswipl.so` on POSIX systems) is available. That means that if
-   you install from [sources] [SWIPL-DOWNLOAD], you must pass option
-   `--enable-shared` to the `configure` script.
+   `libswipl.so` on POSIX systems) is available.
 
-3. Install **Boost C++ Libraries**, version 1.46.1 or greater. Crisp
+4. Install **Boost C++ Libraries**, version 1.46.1 or greater. Crisp
    relies on header-only libraries. On Debian/Ubuntu (and derivatives)
-   you only need to type `sudo apt-get install libboost-dev`. For
-   other systems (or more recent versions of Boost) follow the
-   [general installation instructions for Unix/Linux]
-   [BOOST-UNIX].
+   you only need to type `sudo apt-get install libboost-dev`.
 
-  [CLANG-GET-STARTED]: http://clang.llvm.org/get_started.html
-  [LLVM-COMPILE]:      http://www.llvm.org/docs/GettingStarted.html#compile
-  [SWIPL-DOWNLOAD]:    http://www.swi-prolog.org/Download.html
-  [BOOST-UNIX]:        http://www.boost.org/doc/libs/1_49_0/more/getting_started/unix-variants.html
+   [LIT]: http://llvm.org/docs/CommandGuide/lit.html
+   [PyPI]: https://pypi.python.org/pypi/lit
 
 
 Download Crisp source code
@@ -64,57 +55,19 @@ Download Crisp source code
 
 Source code is available at GitHub:
 
-    git clone git://github.com/gmarpons/Crisp.git crisp
+    git clone git://github.com/gmarpons/Crisp.git
 
 Build Crisp
 -----------
 
-Let `LLVM_SRC_ROOT` (resp. `LLVM_OBJ_ROOT`) the absolute
-root path of your LLVM/Clang source (resp. build) tree, and
-`CRISP_SRC_ROOT` the absolute root path of your Crisp source
-tree. Then do the following:
+Simply execute the following commands in Crisp source directory:
 
-    mkdir $LLVM_OBJ_ROOT/projects/crisp
-    cd $LLVM_OBJ_ROOT/projects/crisp
-    $CRISP_SRC_ROOT/configure \
-      --with-llvmsrc=$LLVM_SRC_ROOT \
-      --with-llvmobj=$LLVM_OBJ_ROOT
-
-(In fact, it is possible to build Crisp in a different directory, but
-`$LLVM_OBJ_ROOT/projects` is meant to be used that way).
-
-You will probably need also to set the header directory for
-SWI-Prolog, with the `configure`'s extra argument
-`--with-swipl-includes`. E.g., in Debian/Ubuntu (and derivatives) you
-need to use
-`--with-swipl-includes=/usr/lib/swi-prolog/include/`. Installation
-directory can be set with `--prefix=SOME_DIR_WITH_WRITE_ACCESS`.
-Documentation for other `configure` command line options (such as
-`--with-swipl-libs`) can be obtained typing
-
-    $CRISP_SRC_ROOT/configure --help
-
-Compilation is possible with a recent version of LLVM/Clang (it does
-not work with GCC). As usual, you can specify a particular building
-compiler with environment variables `CC` and `CXX`. For instance, to
-compile Crisp using the same compiler you are building an add-on for,
-type:
-
-    make CC=$LLVM_OBJ_ROOT/$BUILD_MODE/bin/clang \
-      CXX=$LLVM_OBJ_ROOT/$BUILD_MODE/bin/clang++
-
-    make install
-
-where `BUILD_MODE` can be `Release`, `Debug+Asserts`, or another
-combination describing the debugging/optimizing/profiling options you
-have used to build LLVM/Clang (see Prerequisite 1 above).
-
-If build/install works correctly, it should drop two shared libraries
-in a `lib` sub-directory of your installation place: `crispclang.so`
-and `crispllvm.so`. They are a `clang` plugin and a loadable analysis
-pass for `opt` command, respectively. They are meant to work together
-to detect and report rule violations in your C/C++ code.
-
+    mkdir build && cd build
+    cmake ..
+    make all
+    make install  # to install Crisp
+    make check    # to run tests
+    make package  # to create package
 
 Basic Usage
 ===========
@@ -129,61 +82,66 @@ For example, you can enable coding rule validation for testing file
 `hicpp_3_3_11.cpp` with
 
     cd $CRISP_SRC_ROOT/docs/examples
-    $LLVM_OBJ_ROOT/$BUILD_MODE/bin/clang++ -cc1                       \
-      -load $CRISP_INSTALL_ROOT/lib/crispclang.so                     \
-      -add-plugin crisp-clang -plugin-arg-crisp-clang SomeHICPPrules  \
-      -emit-llvm hicpp_3_3_13.cpp
+    clang++ -cc1                                          \
+      -load $CRISP_LIB_PATH/libcrispclang.so              \
+      -add-plugin crisp -plugin-arg-crisp SomeHICPPrules  \
+      hicpp_3_3_13.cpp
 
 where the meaning of all the options and variables used is the
 following:
 
 - `-cc1`: run the Clang compiler, not the driver that invokes the
   different LLVM tools.
-- `-load $CRISP_INSTALL_ROOT/lib/crispclang.so`: dynamically load a
+- `-load $CRISP_INSTALL_ROOT/lib/libcrispclang.so`: dynamically load a
   plugin that emits a warning message when some coding rule is
-  violated. `$CRISP_INSTALL_ROOT` is the base directory where you have
-  asked to install Crisp during configuration (see section "Build
-  Crisp" above). If you have compiled Crisp with option
-  `ENABLE_DATA_OBJ_ROOT=1`, all the necessary data to run the plugin
-  can be found in the build tree (assume that its root is
-  `$CRISP_OBJ_ROOT`), and you can load the plugin found in
-  `$CRISP_OBJ_ROOT/$BUILD_MODE/lib/crispclang.so` (`$BUILD_MODE` is
-  one of *Release*, *Debug+Asserts*, etc.)
+  violated. `$CRISP_LIB_PATH` is `/usr/local/lib` if you were not
+  defined otherwise at cmake step.
 - `-add-plugin crisp-clang`: run the plugin.
 - `-plugin-arg-crisp-clang SomeHICPPrules`: an argument to the plugin
   to choose a file with rule definitions (so far codified in
   Prolog). A `.pl` extension is optional. Rule files are first
   searched in the working directory, and then in a specific directory
   of the distribution/installation.
-- `-emit-llvm`: compile to LLVM IR.
 - `hicpp_3_3_13.cpp`: input file with C++ code to compile/analyze.
 
 Three warning messages are expected on *stderr* telling that file
 hicpp_3_3_13.cpp contains three violations of rule HICPP 3.3.13.
 
+To run the plugin against your sources you need to tune the build
+script of your project. Sure you need to replace the compiler to
+Clang. To run the same the check from the previous example, you
+need to 'escape' the plugin flags to the compiler, like this:
+
+    CC="clang"
+    CXX="clang++"
+    CXX_FLAGS+="-Xclang -load -Xclang $CRISP_LIB_PATH/libcrispclang.so "
+    CXX_FLAGS+="-Xclang -add-plugin -Xclang crisp "
+    CXX_FLAGS+="-Xclang -plugin-arg-crisp -Xclang SomeHICPPrules "
+
 Some rules need a second step (those that rely on alias analysis
 information):
 
-    $LLVM_OBJ_ROOT/$BUILD_MODE/bin/clang++ -cc1                       \
-      -load $CRISP_INSTALL_ROOT/lib/crispclang.so                     \
-      -add-plugin crisp-clang -plugin-arg-crisp-clang SomeHICPPrules  \
+    clang++ -cc1                                          \
+      -load $CRISP_LIB_PATH/libcrispclang.so              \
+      -add-plugin crisp -plugin-arg-crisp SomeHICPPrules  \
       -emit-llvm hicpp_3_4_2.cpp
 
-    $LLVM_OBJ_ROOT/$BUILD_MODE/bin/opt -analyze                       \
-      -load $CRISP_INSTALL_ROOT/lib/crispllvm.so                      \
-      -crisp-mod -crisp-rules-file SomeHICPPrules                     \
+    opt -analyze                                          \
+      -load $CRISP_LIB_PATH/libcrispllvm.so               \
+      -crisp-mod -crisp-rules-file SomeHICPPrules         \
       -basicaa hicpp_3_4_2.ll > /dev/null
 
 The first command is the same shown before, but applied to example
-file `hicpp_3_4_2.cpp`. The second command runs the optimization and
-analysis tool of LLVM, and executes an analysis pass for rule
-validation based on alias analysis. The precision of rule checkers
-depends on the sophistication of the alias analysis used. `-basicaa`
-enables a simple alias analysis algorithm. Other useful alias analysis
-implementations require installing loadable modules distributed
-separately. The command takes as input a `.ll` file generated in the
-previous step. The expected output is a list of two warnings, telling
-that rule HICPP 3.4.2 has been violated by two different functions.
+file `hicpp_3_4_2.cpp` and `-emit-llvm` to compile to LLVM IR.
+The second command runs the optimization and analysis tool of LLVM,
+and executes an analysis pass for rule validation based on alias
+analysis. The precision of rule checkers depends on the sophistication
+of the alias analysis used. `-basicaa` enables a simple alias analysis
+algorithm. Other useful alias analysis implementations require
+installing loadable modules distributed separately. The command takes
+as input a `.ll` file generated in the previous step. The expected
+output is a list of two warnings, telling that rule HICPP 3.4.2 has
+been violated by two different functions.
 
 
 Known Issues
