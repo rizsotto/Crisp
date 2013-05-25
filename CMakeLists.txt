@@ -38,7 +38,6 @@ set(CMAKE_C_COMPILER "${CLANG_EXECUTABLE}")
 
 add_definitions("-DDATA_INSTALL_ROOT=${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
 
-add_subdirectory(include)
 add_subdirectory(prolog)
 # order is important!!! lib is using variable from prolog.
 add_subdirectory(lib)
