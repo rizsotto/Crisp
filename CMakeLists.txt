@@ -28,6 +28,7 @@ find_package(Threads REQUIRED)
 find_package(Boost REQUIRED)
 find_package(Swipl REQUIRED)
 find_package(Clang REQUIRED)
+find_package(Lit)
 
 list(APPEND include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/include)
 list(APPEND include_dirs ${CMAKE_CURRENT_BINARY_DIR}/include)
