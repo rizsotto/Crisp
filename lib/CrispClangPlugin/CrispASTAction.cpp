@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include <iterator>
+#include <iostream>
 #include <boost/functional.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
@@ -37,7 +38,6 @@
 #include "clang/Basic/SourceManager.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/FrontendPluginRegistry.h"
-#include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/raw_ostream.h"
@@ -198,7 +198,7 @@ namespace crisp {
   public:
     CrispASTAction()
       : PluginASTAction()
-      , BootFilesDir()
+      , BootFilesDir(XSTR(DATA_INSTALL_ROOT))
       , RulesFileName()
       , FlagInteractive(false)
       , FlagDebug(false)
@@ -219,50 +219,46 @@ namespace crisp {
     bool FlagDebug;
   };
 
-  static char const * const PluginName = "crisp-clang";
-
   bool CrispASTAction::ParseArgs(const CompilerInstance &CI,
                                  const std::vector<std::string> &Args) {
 
-    std::vector<char const *> ArgPtrs;
-    {
-      // make cl::ParseCommandLineOptions happy
-      ArgPtrs.push_back(PluginName);
-
-      b::transform(b::make_iterator_range(Args.begin(), Args.end()),
-                   std::back_inserter(ArgPtrs),
-                   b::mem_fun_ref(&std::string::c_str));
+    typedef std::vector<std::string>::const_iterator SIt;
+    for (SIt It(Args.begin()), End(Args.end()); It != End; ++It) {
+        if (*It == "-help") {
+            std::cerr <<
+                "Crisp usage: [options] <rules_file>\n\n"
+                "options:\n"
+                "  -help            This output\n"
+                "  -debug           Enable debug output\n"
+                "  -interactive     Enable interactive Prolog session\n"
+                "  -boot-dir=<path> Specify prolog boot files directory\n";
+            return false;
+        }
+        else if (*It == "-debug") {
+            FlagDebug = true;
+        }
+        else if (*It == "-interactive") {
+            FlagInteractive = true;
+        }
+        else if (0 == It->find("-boot-dir=")) {
+            BootFilesDir = It->substr(10);
+        }
+        else if (0 == It->find("-")) {
+            std::cerr << "Crisp: unkown parameter, see usage with -help\n";
+            return false;
+        }
+        else {
+            RulesFileName = *It;
+        }
     }
-    {
-      static cl::opt<std::string> const
-        BootFilesDirParser("crisp-boot-dir",
-                        cl::desc("Specify boot files directory"),
-                        cl::value_desc("dir"),
-                        cl::init(XSTR(DATA_INSTALL_ROOT)));
-      static cl::opt<std::string> const
-        RulesFileNameParser(cl::Positional,
-                        cl::value_desc("rule_file"),
-                        cl::Required);
-      static cl::opt<bool> const
-        FlagInteractiveParser("-interactive",
-                        cl::desc("Enable interactive Prolog session"),
-                        cl::init(false));
-      static cl::opt<bool> const
-        FlagDebugParser("-debug",
-                        cl::desc("Enable debug output"),
-                        cl::init(false));
-
-      cl::ParseCommandLineOptions(ArgPtrs.size(), &ArgPtrs.front());
-
-      BootFilesDir = BootFilesDirParser;
-      RulesFileName = RulesFileNameParser;
-      FlagInteractive = FlagInteractiveParser;
-      FlagDebug = FlagDebugParser;
+    if (RulesFileName.empty()) {
+        std::cerr << "Crisp: missing rule file, see usage with -help\n";
+        return false;
     }
     return true;
   }
 
   static FrontendPluginRegistry::Add<CrispASTAction>
-    X(PluginName, "Data extraction clang plugin for CRISP");
+    X("crisp", "Data extraction clang plugin for CRISP");
 
 } // End namespace crisp

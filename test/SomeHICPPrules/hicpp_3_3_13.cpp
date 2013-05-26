@@ -1,4 +1,4 @@
-// RUN: %crisp_clang_cc1 -plugin-arg-crisp-clang SomeHICPPrules %s -verify
+// RUN: %crisp_clang_cc1 -plugin-arg-crisp SomeHICPPrules %s -verify
 
 class B {
 public:
