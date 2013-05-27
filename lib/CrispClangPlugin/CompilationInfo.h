@@ -27,7 +27,6 @@
 #include "clang/AST/PrettyPrinter.h"
 #include "clang/Frontend/CompilerInstance.h"
 
-using namespace clang;
 
 namespace crisp {
 
@@ -35,21 +34,21 @@ namespace crisp {
 
     class CompilationInfo {
     public:
-      const CompilerInstance& getCompilerInstance() const;
+      const clang::CompilerInstance& getCompilerInstance() const;
 
-      const LangOptions& getLangOpts() const;
+      const clang::LangOptions& getLangOpts() const;
 
-      const PrintingPolicy& getPrintingPolicy() const;
+      const clang::PrintingPolicy& getPrintingPolicy() const;
 
-      const SourceManager& getSourceManager() const;
+      const clang::SourceManager& getSourceManager() const;
 
-      MangleContext* getMangleContext();
+      clang::MangleContext* getMangleContext();
 
-      friend void newCompilationInfo(CompilerInstance &CI);
+      friend void newCompilationInfo(clang::CompilerInstance &CI);
       friend void deleteCompilationInfo();
 
     private:
-      CompilationInfo(CompilerInstance &CI)
+      CompilationInfo(clang::CompilerInstance &CI)
         : CompilerInstance(CI)
         , LangOptions(CI.getLangOpts())
         , PrintingPolicy(LangOptions)
@@ -59,37 +58,37 @@ namespace crisp {
 
       ~CompilationInfo();
 
-      const CompilerInstance &CompilerInstance;
-      const LangOptions &LangOptions;
-      const PrintingPolicy PrintingPolicy;
-      const SourceManager &SourceManager;
-      MangleContext *MangleContext;
+      const clang::CompilerInstance &CompilerInstance;
+      const clang::LangOptions &LangOptions;
+      const clang::PrintingPolicy PrintingPolicy;
+      const clang::SourceManager &SourceManager;
+      clang::MangleContext *MangleContext;
     };
 
     CompilationInfo* getCompilationInfo();
 
-    void newCompilationInfo(CompilerInstance &CI);
+    void newCompilationInfo(clang::CompilerInstance &CI);
 
     void deleteCompilationInfo();
 
-    inline const CompilerInstance&
+    inline const clang::CompilerInstance&
     CompilationInfo::getCompilerInstance() const {
       return CompilerInstance;
     }
 
-    inline const LangOptions& CompilationInfo::getLangOpts() const {
+    inline const clang::LangOptions& CompilationInfo::getLangOpts() const {
       return LangOptions;
     }
 
-    inline const PrintingPolicy& CompilationInfo::getPrintingPolicy() const {
+    inline const clang::PrintingPolicy& CompilationInfo::getPrintingPolicy() const {
       return PrintingPolicy;
     }
 
-    inline const SourceManager& CompilationInfo::getSourceManager() const {
+    inline const clang::SourceManager& CompilationInfo::getSourceManager() const {
       return SourceManager;
     }
 
-    inline MangleContext* CompilationInfo::getMangleContext() {
+    inline clang::MangleContext* CompilationInfo::getMangleContext() {
       return MangleContext;
     }
 

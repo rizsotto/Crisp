@@ -27,14 +27,12 @@
 
 #include "clang/AST/Decl.h"
 
-using namespace clang;
-
 namespace crisp {
 
   namespace prolog {
 
-    int plAssertDeclIsA(Decl *Decl, const std::string &Sort);
-    int plAssertTypeIsA(Type *Type, const std::string &Sort);
+    int plAssertDeclIsA(clang::Decl *Decl, const std::string &Sort);
+    int plAssertTypeIsA(clang::Type *Type, const std::string &Sort);
     int plRunTranslationUnitAnalysis(const char* FileName);
 
   } // End namespace crisp::prolog

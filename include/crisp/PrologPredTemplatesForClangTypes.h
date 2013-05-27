@@ -24,119 +24,117 @@
 
 #include "crisp/PrologPredBaseTemplates.h"
 
-using namespace llvm;
-using namespace clang;
 
 namespace crisp {
 
   namespace prolog {
 
-    /// Specialization for \c QualType, that is a smart pointer.
+    /// Specialization for \c clang::QualType, that is a smart pointer.
     template <>
-    struct Retrieve <QualType> {
-      typedef QualType argument_type;
+    struct Retrieve <clang::QualType> {
+      typedef clang::QualType argument_type;
 
       static inline int
-      _(term_t ArgumentT, argument_type* A, StringRef PredName) {
+      _(term_t ArgumentT, argument_type* A, llvm::StringRef PredName) {
         if ( !PL_get_pointer(ArgumentT, (void **) A))
           return pl_warning(PredName + ": instantiation fault on first arg");
         return TRUE;
       }
     };
 
-    /// Specialization for \c QualType (that is a smart pointer) as \c
+    /// Specialization for \c clang::QualType (that is a smart pointer) as \c
     /// ArgumentType.
     template <typename ResultType,
-              ResultType (QualType::* Getter)() const>
-    struct Get<QualType, ResultType, Getter> {
-      typedef QualType argument_type;
+              ResultType (clang::QualType::* Getter)() const>
+    struct Get<clang::QualType, ResultType, Getter> {
+      typedef clang::QualType argument_type;
       typedef ResultType result_type;
       static inline result_type _(argument_type A) {
         return (A .* Getter)();
       }
     };
 
-    /// Specialization for \c QualType (that is a smart pointer) as \c
+    /// Specialization for \c clang::QualType (that is a smart pointer) as \c
     /// ResultType.
     template <typename ArgumentType,
-              QualType (ArgumentType::* Getter)() const>
-    struct Get<ArgumentType, QualType, Getter> {
+              clang::QualType (ArgumentType::* Getter)() const>
+    struct Get<ArgumentType, clang::QualType, Getter> {
       typedef ArgumentType* argument_type;
-      typedef QualType result_type;
+      typedef clang::QualType result_type;
       static inline result_type _(argument_type A) {
         return (A ->* Getter)();
       }
     };
 
-    /// Specialization for \c QualType (that is a smart pointer) as
+    /// Specialization for \c clang::QualType (that is a smart pointer) as
     /// both \c ArgumentType and \c ResultType.
-    template <QualType (QualType::* Getter)() const>
-    struct Get<QualType, QualType, Getter> {
-      typedef QualType argument_type;
-      typedef QualType result_type;
+    template <clang::QualType (clang::QualType::* Getter)() const>
+    struct Get<clang::QualType, clang::QualType, Getter> {
+      typedef clang::QualType argument_type;
+      typedef clang::QualType result_type;
       static inline result_type _(argument_type A) {
         return (A .* Getter)();
       }
     };
 
-    /// Specialization for \c QualType (that is a smart pointer) as \c
+    /// Specialization for \c clang::QualType (that is a smart pointer) as \c
     /// ArgumentType.
-    template <bool (QualType::* Predicate)() const>
-    struct Check<QualType, Predicate> {
-      typedef QualType argument_type;
+    template <bool (clang::QualType::* Predicate)() const>
+    struct Check<clang::QualType, Predicate> {
+      typedef clang::QualType argument_type;
       static inline foreign_t  _(argument_type Argument) {
         return (Argument .* Predicate)() ? TRUE : FALSE;
       }
     };
 
-    /// Specialization for \c Qualifiers.
-    template <bool (Qualifiers::* Predicate)() const>
-    struct Check<Qualifiers, Predicate> {
-      typedef Qualifiers argument_type;
+    /// Specialization for \c clang::Qualifiers.
+    template <bool (clang::Qualifiers::* Predicate)() const>
+    struct Check<clang::Qualifiers, Predicate> {
+      typedef clang::Qualifiers argument_type;
       static inline foreign_t  _(argument_type Argument) {
         return (Argument .* Predicate)() ? TRUE : FALSE;
       }
     };
 
-    // Specialization for \c QualType, that is a smart pointer. We
-    // still need \c QualType::getTypePtr() when \c Type methods are
+    // Specialization for \c clang::QualType, that is a smart pointer. We
+    // still need \c clang::QualType::getTypePtr() when \c Type methods are
     // to be applied, as the smart pointer can sometimes point to a
     // structure different to a \c Type.
     template <>
-    struct Unify<QualType> {
-      typedef QualType result_type;
+    struct Unify<clang::QualType> {
+      typedef clang::QualType result_type;
       static inline foreign_t _(term_t ResultT, const result_type& Result) {
         return PL_unify_pointer(ResultT, Result.getAsOpaquePtr());
       }
     };
 
-    /// Specialization for \c enum \c AccessSpecifier.
+    /// Specialization for \c enum \c clang::AccessSpecifier.
     template <>
-    struct Unify<enum AccessSpecifier> {
-      typedef enum AccessSpecifier result_type;
+    struct Unify<enum clang::AccessSpecifier> {
+      typedef enum clang::AccessSpecifier result_type;
       static inline foreign_t _(term_t ResultT, const result_type Result) {
         switch (Result) {
-        case AS_public:
+        case clang::AS_public:
           return PL_unify_atom_chars(ResultT, "public");
-        case AS_protected:
+        case clang::AS_protected:
           return PL_unify_atom_chars(ResultT, "protected");
-        case AS_private:
+        case clang::AS_private:
           return PL_unify_atom_chars(ResultT, "private");
-        case AS_none:
+        case clang::AS_none:
           return PL_unify_atom_chars(ResultT, "none");
         }
       }
     };
 
-    /// Specialization for \c DeclContext. It is necessary because \c
-    /// DeclContext objects need to be dynamically casted into a \c
-    /// Decl to be useful, as \c DeclContext doesn't extend \c Decl.
+    /// Specialization for \c clang::DeclContext. It is necessary because \c
+    /// clang::DeclContext objects need to be dynamically casted into a \c
+    /// clang::Decl to be useful, as \c clang::DeclContext doesn't extend \c clang::Decl.
     template <>
-    struct Unify<const DeclContext*> {
-      typedef const DeclContext* result_type;
+    struct Unify<const clang::DeclContext*> {
+      typedef const clang::DeclContext* result_type;
       static inline foreign_t _(term_t ResultT, const result_type Result) {
         if ( !Result) return FALSE;
-        if ( const Decl* D = dyn_cast<Decl>(Result))
+        if ( const clang::Decl* D = llvm::dyn_cast<clang::Decl>(Result))
           return PL_unify_pointer(ResultT, (void *) D); // Cast removes const
         else
           return FALSE;
@@ -148,8 +146,8 @@ namespace crisp {
     /// in fact a smart pointer, we don't need dynamic memory
     /// allocation in this case.
     template <typename SpecificDecl>
-    struct Context < DeclContext::specific_decl_iterator<SpecificDecl> > {
-      typedef DeclContext::specific_decl_iterator<SpecificDecl> iterator_type;
+    struct Context < clang::DeclContext::specific_decl_iterator<SpecificDecl> > {
+      typedef clang::DeclContext::specific_decl_iterator<SpecificDecl> iterator_type;
       typedef typename iterator_type::value_type context_type;
       static inline context_type newContext(iterator_type I) {
         return *I;
@@ -158,8 +156,8 @@ namespace crisp {
         // Do nothing.
       }
       static inline void context2iter(context_type C, iterator_type& I) {
-        DeclContext::decl_iterator DI(C);
-        I = DeclContext::specific_decl_iterator<SpecificDecl>(DI);
+        clang::DeclContext::decl_iterator DI(C);
+        I = clang::DeclContext::specific_decl_iterator<SpecificDecl>(DI);
       }
       static inline void iter2context(iterator_type I, context_type& C) {
         C = *I;

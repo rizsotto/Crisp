@@ -22,9 +22,6 @@
 /// \file
 /// \brief Functions to query Prolog and assert facts from Crisp LLVM Pass.
 
-#include "llvm/Function.h"
-
-using namespace llvm;
 
 namespace crisp {
 

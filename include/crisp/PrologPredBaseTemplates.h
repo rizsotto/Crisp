@@ -30,16 +30,15 @@
 #include "llvm/ADT/Twine.h"
 #include "llvm/Use.h"
 
-using namespace llvm;
 
 namespace crisp {
 
   namespace prolog {
 
     /// This function is used to concat different \c string's (or \c
-    /// const \c char*, or \c StringRef's) in one single Prolog
+    /// const \c char*, or \c llvm::StringRef's) in one single Prolog
     /// warning message.
-    foreign_t pl_warning(const Twine &Message) {
+    foreign_t pl_warning(const llvm::Twine &Message) {
       return PL_warning(Message.getSingleStringRef().data());
     }
 
@@ -50,7 +49,7 @@ namespace crisp {
       typedef ArgumentType* argument_type;
 
       static inline int
-      _(term_t ArgumentT, argument_type* A, StringRef PredName) {
+      _(term_t ArgumentT, argument_type* A, llvm::StringRef PredName) {
         if ( !PL_get_pointer(ArgumentT, (void **) A))
           return pl_warning(PredName + ": instantiation fault on first arg");
         return TRUE;
@@ -167,7 +166,7 @@ namespace crisp {
     template <typename ArgumentType,
               typename ResultType,
               ResultType (ArgumentType::* Getter)() const>
-    foreign_t getOne(term_t ArgumentT, term_t ResultT, StringRef GetterName) {
+    foreign_t getOne(term_t ArgumentT, term_t ResultT, llvm::StringRef GetterName) {
       typename Retrieve<ArgumentType>::argument_type Argument;
       if ( !Retrieve<ArgumentType>::_(ArgumentT, &Argument, GetterName))
         return FALSE;
@@ -209,7 +208,7 @@ namespace crisp {
     /// the property.
     template <typename ArgumentType,
               bool (ArgumentType::* Getter)() const>
-    foreign_t checkProperty(term_t ArgumentT, StringRef PropertyName) {
+    foreign_t checkProperty(term_t ArgumentT, llvm::StringRef PropertyName) {
       typedef typename Retrieve<ArgumentType>::argument_type argument_type;
       argument_type Argument;
       if ( !Retrieve<ArgumentType>::_(ArgumentT, &Argument, PropertyName))
@@ -238,12 +237,12 @@ namespace crisp {
     };
 
     /// Specialization for llvm::Use (kind of smart pointer to a
-    /// Value*).
+    /// llvm::Value*).
     template <typename IteratorType>
-    struct UnifyIteratorAux<IteratorType, Use> {
+    struct UnifyIteratorAux<IteratorType, llvm::Use> {
       typedef IteratorType iterator_type;
       static inline foreign_t _(term_t ResultT, iterator_type I) {
-        return PL_unify_pointer(ResultT, (Value *) *I);
+        return PL_unify_pointer(ResultT, (llvm::Value *) *I);
       }
     };
 
@@ -272,8 +271,8 @@ namespace crisp {
 
     /// Specialization for llvm::ilist_iterator.
     template <typename ValueType>
-    struct UnifyIterator< ilist_iterator<ValueType> > {
-      typedef ilist_iterator<ValueType> iterator_type;
+    struct UnifyIterator< llvm::ilist_iterator<ValueType> > {
+      typedef llvm::ilist_iterator<ValueType> iterator_type;
       typedef std::iterator_traits<iterator_type> traits_type;
       typedef typename traits_type::pointer unify_type;
       static inline foreign_t _(term_t ResultT, iterator_type I) {
@@ -349,12 +348,12 @@ namespace crisp {
       }
     };
 
-    /// Specialization for \c ilist_iterator 's. As class \c
-    /// ilist_iterator is in fact a smart pointer, we don't need
+    /// Specialization for \c llvm::ilist_iterator 's. As class \c
+    /// llvm::ilist_iterator is in fact a smart pointer, we don't need
     /// dynamic memory allocation in this case.
     template <typename ValueType>
-    struct Context < ilist_iterator<ValueType> > {
-      typedef ilist_iterator<ValueType> iterator_type;
+    struct Context < llvm::ilist_iterator<ValueType> > {
+      typedef llvm::ilist_iterator<ValueType> iterator_type;
       typedef typename iterator_type::pointer context_type;
       static inline context_type newContext(iterator_type I) {
         return I;
@@ -397,7 +396,7 @@ namespace crisp {
     /// through this role.
     template <typename ArgumentType,
               typename IteratorHelper>
-    foreign_t getManyAux(term_t ArgumentT, term_t ResultT, StringRef PredName,
+    foreign_t getManyAux(term_t ArgumentT, term_t ResultT, llvm::StringRef PredName,
                          control_t Handle) {
       typedef typename IteratorHelper::iterator_type iterator_type;
       typedef typename Context<iterator_type>::context_type context_type;
@@ -453,7 +452,7 @@ namespace crisp {
               typename IteratorType,
               IteratorType (ArgumentType::* Begin)() const,
               IteratorType (ArgumentType::* End)() const>
-    foreign_t getMany(term_t ArgumentT, term_t ResultT, StringRef PredName,
+    foreign_t getMany(term_t ArgumentT, term_t ResultT, llvm::StringRef PredName,
                       control_t Handle) {
       typedef MemberIteratorHelper<ArgumentType, IteratorType, Begin, End>
         IteratorHelper;
@@ -467,7 +466,7 @@ namespace crisp {
               typename IteratorType,
               IteratorType (* Begin)(const ArgumentType*),
               IteratorType (* End)(const ArgumentType*)>
-    foreign_t getMany(term_t ArgumentT, term_t ResultT, StringRef PredName,
+    foreign_t getMany(term_t ArgumentT, term_t ResultT, llvm::StringRef PredName,
                       control_t Handle) {
       typedef ExternalIteratorHelper<ArgumentType, IteratorType, Begin, End>
         IteratorHelper;

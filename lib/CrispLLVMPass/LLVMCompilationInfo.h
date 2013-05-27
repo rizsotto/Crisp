@@ -27,8 +27,7 @@
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/Pass.h"
 
-using namespace llvm;
-typedef AliasAnalysis::Location Location;
+typedef llvm::AliasAnalysis::Location Location;
 
 namespace crisp {
 
@@ -36,23 +35,23 @@ namespace crisp {
 
     class LLVMCompilationInfo {
     public:
-      const Pass& getPass() const;
-      const Module& getModule() const;
+      const llvm::Pass& getPass() const;
+      const llvm::Module& getModule() const;
 
       std::list<Location>& getLocations();
 
-      friend void newLLVMCompilationInfo(Pass &P, Module &M);
+      friend void newLLVMCompilationInfo(llvm::Pass &P, llvm::Module &M);
       friend void deleteLLVMCompilationInfo();
 
     private:
-      LLVMCompilationInfo(Pass &P, Module &M)
+      LLVMCompilationInfo(llvm::Pass &P, llvm::Module &M)
         : Pass(P), Module(M) {
       }
 
       ~LLVMCompilationInfo();
 
-      const Pass &Pass;
-      const Module &Module;
+      const llvm::Pass &Pass;
+      const llvm::Module &Module;
 
       // TODO: see if a more efficient data structure than a linked
       // list can be found for Locations. We need that pointers to
@@ -67,15 +66,15 @@ namespace crisp {
 
     LLVMCompilationInfo* getLLVMCompilationInfo();
 
-    void newLLVMCompilationInfo(Pass &P, Module &M);
+    void newLLVMCompilationInfo(llvm::Pass &P, llvm::Module &M);
 
     void deleteLLVMCompilationInfo();
 
-    inline const Pass& LLVMCompilationInfo::getPass() const {
+    inline const llvm::Pass& LLVMCompilationInfo::getPass() const {
       return Pass;
     }
 
-    inline const Module& LLVMCompilationInfo::getModule() const {
+    inline const llvm::Module& LLVMCompilationInfo::getModule() const {
       return Module;
     }
 

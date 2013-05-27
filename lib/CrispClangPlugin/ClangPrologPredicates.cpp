@@ -43,6 +43,7 @@
 #include "ClangPrologPredicates.h"
 
 using namespace clang;
+using namespace llvm;
 
 namespace crisp {
 
