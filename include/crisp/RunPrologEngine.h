@@ -17,14 +17,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
+#pragma once
+
 /// \file
 /// \brief An isolation layer between Crisp and the SWI Prolog C interface.
 ///
 /// Functions necessary to run and clean up a Prolog Engine, and start
 /// an interactive session.
-
-#ifndef RUNPROLOGENGINE_H
-#define RUNPROLOGENGINE_H
 
 #include <string>
 
@@ -45,5 +44,3 @@ namespace crisp {
   } // End namespace crisp::prolog
 
 } // End namespace crisp
-
-#endif

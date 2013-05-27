@@ -18,15 +18,14 @@
    along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 /** \file
  *  \brief External (LLVM) predicates to be used from Prolog.
  *
  *  This file contains C++ functions (with ISO-C headers) implementing
  *  Prolog predicates, to be called during Crisp LLVM Pass execution.
  */
-
-#ifndef CRISPLLVMPASS_CLANGPROLOGPREDICATES_H
-#define CRISPLLVMPASS_CLANGPROLOGPREDICATES_H
 
 #include <SWI-Prolog.h>
 
@@ -101,5 +100,3 @@ extern "C" {
 
 } /* End "extern" C */
 #endif
-
-#endif  /* #ifndef CRISPLLVMPASS_CLANGPROLOGPREDICATES_H */

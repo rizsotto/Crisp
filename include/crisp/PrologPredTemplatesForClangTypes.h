@@ -17,8 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef PROLOGPREDTEMPLATESFORCLANGTYPES_H
-#define PROLOGPREDTEMPLATESFORCLANGTYPES_H
+#pragma once
 
 #include "clang/AST/DeclBase.h"
 #include "clang/AST/Type.h"
@@ -170,5 +169,3 @@ namespace crisp {
   } // End namespace crisp::prolog
 
 } // End namespace crisp
-
-#endif

@@ -18,6 +18,8 @@
    along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 /** \file \brief Preprocessor macro definitions to \e define functions
  *  that implement in C++ Prolog predicates with functionality
  *  automatically grasped from LLVM or Clang sources.

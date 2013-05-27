@@ -18,12 +18,11 @@
    along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 /** \file
  *  \brief Prolog predicate registering function for LLVM Pass.
  */
-
-#ifndef CRISPLLVMPASS_LLVMPROLOGPREDICATEREGISTRATION_H
-#define CRISPLLVMPASS_LLVMPROLOGPREDICATEREGISTRATION_H
 
 #include <SWI-Prolog.h>
 
@@ -36,5 +35,3 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
-
-#endif  /* ifndef CRISPLLVMPASS_LLVMPROLOGPREDICATEREGISTRATION_H */

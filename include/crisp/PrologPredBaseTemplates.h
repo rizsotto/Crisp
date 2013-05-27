@@ -17,11 +17,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
+#pragma once
+
 /// \file \brief Templates used to easily implement Prolog predicates
 /// in C++ (corresponding to LLVM/Clang functions).
-
-#ifndef PROLOGPREDBASETEMPLATES_H
-#define PROLOGPREDBASETEMPLATES_H
 
 #include <iterator>
 #include <string>
@@ -479,5 +478,3 @@ namespace crisp {
   } // End namespace crisp::prolog
 
 } // End namespace crisp
-
-#endif

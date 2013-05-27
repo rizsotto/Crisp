@@ -17,11 +17,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
+#pragma once
+
 /// \file
 /// \brief Global data to be used by Prolog predicates implemented in C++.
-
-#ifndef CRISPLLVMPASS_LLVMCOMPILATIONINFO_H
-#define CRISPLLVMPASS_LLVMCOMPILATIONINFO_H
 
 #include <list>
 
@@ -87,5 +86,3 @@ namespace crisp {
   } // End namespace crisp::prolog
 
 } // End namespace crisp
-
-#endif

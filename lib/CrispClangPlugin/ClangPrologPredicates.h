@@ -18,6 +18,8 @@
    along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 /** \file
  *  \brief External (Clang) predicates to be used from Prolog.
  *
@@ -25,9 +27,6 @@
  *  Prolog predicates, to be called during Crisp Clang plugin
  *  execution.
  */
-
-#ifndef CRISPCLANGPLUGIN_CLANGPROLOGPREDICATES_H
-#define CRISPCLANGPLUGIN_CLANGPROLOGPREDICATES_H
 
 #include <SWI-Prolog.h>
 
@@ -87,5 +86,3 @@ extern "C" {
 
 } /* End "extern" C */
 #endif
-
-#endif  /* #ifndef CRISPCLANGPLUGIN_CLANGPROLOGPREDICATES_H */

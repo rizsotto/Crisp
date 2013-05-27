@@ -17,12 +17,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
+#pragma once
+
 /// \file
 /// \brief Functions to query Prolog and assert facts about an
 /// execution of Clang.
-
-#ifndef CLANGPROLOGQUERIES_H
-#define CLANGPROLOGQUERIES_H
 
 #include <string>
 
@@ -41,5 +40,3 @@ namespace crisp {
   } // End namespace crisp::prolog
 
 } // End namespace crisp
-
-#endif

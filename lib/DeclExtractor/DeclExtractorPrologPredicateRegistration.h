@@ -18,8 +18,7 @@
    along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DECLEXTRACTORPROLOGPREDICATEREGISTRATION_H
-#define DECLEXTRACTORPROLOGPREDICATEREGISTRATION_H
+#pragma once
 
 #include <SWI-Prolog.h>
 
@@ -32,5 +31,3 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
-
-#endif  /* ifndef DECLEXTRACTORPROLOGPREDICATEREGISTRATION_H */

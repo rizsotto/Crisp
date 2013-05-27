@@ -18,6 +18,8 @@
    along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 /** \file \brief Preprocessor macro definitions to \e register as SWI
  *  Prolog predicates, functions that implement functionality
  *  automatically grasped from LLVM or Clang sources.

@@ -17,11 +17,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
+#pragma once
+
 /// \file \brief Utility functions to implement Prolog query functions
 /// of both Clang and LLVM plugins.
-
-#ifndef PROLOGUTILITYFUNCTIONS_H
-#define PROLOGUTILITYFUNCTIONS_H
 
 #include <string>
 
@@ -34,6 +33,3 @@ namespace crisp {
   } // End namespace crisp::prolog
 
 } // End namespace crisp
-
-#endif
-

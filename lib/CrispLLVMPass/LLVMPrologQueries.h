@@ -17,11 +17,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Crisp.  If not, see <http://www.gnu.org/licenses/>.
 
+#pragma once
+
 /// \file
 /// \brief Functions to query Prolog and assert facts from Crisp LLVM Pass.
-
-#ifndef CRISPLLVMPASS_LLVMPROLOGQUERIES_H
-#define CRISPLLVMPASS_LLVMPROLOGQUERIES_H
 
 #include "llvm/Function.h"
 
@@ -37,5 +36,3 @@ namespace crisp {
   } // End namespace crisp::prolog
 
 } // End namespace crisp
-
-#endif
